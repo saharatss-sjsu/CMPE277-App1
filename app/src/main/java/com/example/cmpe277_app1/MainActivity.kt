@@ -3,8 +3,10 @@ package com.example.cmpe277_app1
 import android.content.Intent
 import android.os.Bundle
 import android.app.AlertDialog
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,14 +40,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                     MainComponent(name = "Activity A") {
                         Button(onClick = {
-                            startActivity(Intent(this, ActivityB::class.java).apply {
-                                putExtra("counter", counter)
-                            })
+                            counter += 5
+                            startActivity(Intent(this, ActivityB::class.java))
                         }) { Text(text = "Start Activity B") }
                         Button(onClick = {
-                            startActivity(Intent(this, ActivityC::class.java).apply {
-                                putExtra("counter", counter)
-                            })
+                            counter += 10
+                            startActivity(Intent(this, ActivityC::class.java))
                         }) { Text(text = "Start Activity C") }
                         Button(onClick = {
                             AlertDialog.Builder(this)
@@ -69,12 +69,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        counter += 1
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        counter = 0
+        Log.d("activityMain", "counter = $counter")
     }
 }
 
@@ -90,29 +85,5 @@ fun MainComponent(name: String, content: @Composable () -> Unit){
         Text(text = name, style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.size(30.dp))
         content()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CMPE277App1Theme {
-        MainComponent(name = "Activity Preview") {
-            Button(onClick = {
-
-            }) { Text(text = "Start Activity B") }
-            Button(onClick = {
-
-            }) { Text(text = "Start Activity C") }
-            Button(onClick = {
-
-            }) { Text(text = "Start Dialog") }
-            Spacer(modifier = Modifier.size(20.dp))
-            Text(text = "counter = 0")
-            Spacer(modifier = Modifier.size(20.dp))
-            Button(onClick = {
-
-            }) { Text(text = "Close App") }
-        }
     }
 }
